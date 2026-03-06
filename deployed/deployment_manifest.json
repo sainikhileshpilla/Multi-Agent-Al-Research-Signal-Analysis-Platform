@@ -1,0 +1,6 @@
+{
+  "status": "deployed",
+  "deployed_at": "2026-03-03T00:54:36.424056",
+  "source_model": "/home/scarlett_speedster/first_project/models/signal_model.pkl",
+  "deployed_model": "/home/scarlett_speedster/first_project/deployed/signal_model.pkl"
+}
