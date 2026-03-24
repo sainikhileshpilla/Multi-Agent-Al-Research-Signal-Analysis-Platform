@@ -29,7 +29,7 @@ This repository contains a **CrewAI-based multi-agent machine learning pipeline*
 ### Setup
 
 ```bash
-cd /home/scarlett_speedster/first_project
+cd /home/scarlett_speedster/source_code
 source cleanenv/bin/activate      # activate the provided virtual environment
 ```
 
@@ -45,10 +45,10 @@ uv sync                            # install dependencies via uv
 
 ```bash
 # run the full crew pipeline
-cleanenv/bin/python -m first_project.main
+cleanenv/bin/python -m source_code.main
 
 # or short
-uv run first_project
+uv run source_code
 ```
 
 ### Data
@@ -71,7 +71,7 @@ data/raw/
 ## Project Structure
 
 ```
-first_project/                # Python package
+source_code/                # Python package
 ├── crew.py                   # Crew & agent definitions
 ├── main.py                   # CLI entrypoint
 ├── pipelines/                # ingestion, validation, training logic

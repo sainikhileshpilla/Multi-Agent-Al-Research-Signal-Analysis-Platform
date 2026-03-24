@@ -1,6 +1,6 @@
 import pathlib
 from crewai.tools import BaseTool
-from first_project.pipelines.train import train_model
+from source_code.pipelines.train import train_model
 
 PROJECT_ROOT = pathlib.Path(__file__).resolve().parents[1]
 

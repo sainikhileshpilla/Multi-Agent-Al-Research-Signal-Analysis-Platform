@@ -8,8 +8,8 @@ from sklearn.svm import SVC
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 
-from first_project.pipelines.feature_engineering import generate_features
-from first_project.monitoring.logger import log_model_performance
+from source_code.pipelines.feature_engineering import generate_features
+from source_code.monitoring.logger import log_model_performance
 
 
 PROJECT_ROOT = pathlib.Path(__file__).resolve().parents[1]

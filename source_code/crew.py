@@ -1,13 +1,13 @@
 # crew.py
 
 from crewai import Agent, Task, Crew, Process
-from first_project.tools.data_pipeline_tool import DataPipelineTool
-from first_project.tools.financial_news_web_tool import FinancialNewsWebTool
-from first_project.tools.csv_reader_tool import CSVReaderTool
-from first_project.tools.model_training_tool import ModelTrainingTool
-from first_project.tools.model_monitoring_tool import ModelMonitoringTool
-from first_project.tools.model_prediction_tool import ModelPredictionTool
-from first_project.tools.model_deployment_tool import ModelDeploymentTool
+from source_code.tools.data_pipeline_tool import DataPipelineTool
+from source_code.tools.financial_news_web_tool import FinancialNewsWebTool
+from source_code.tools.csv_reader_tool import CSVReaderTool
+from source_code.tools.model_training_tool import ModelTrainingTool
+from source_code.tools.model_monitoring_tool import ModelMonitoringTool
+from source_code.tools.model_prediction_tool import ModelPredictionTool
+from source_code.tools.model_deployment_tool import ModelDeploymentTool
 
 RAW_DATA_PATH = "data/raw/live_news.csv"
 PROCESSED_DATA_PATH = "data/processed/news_cleaned.csv"

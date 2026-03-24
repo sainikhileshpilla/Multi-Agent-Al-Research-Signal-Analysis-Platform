@@ -4,11 +4,11 @@ import joblib
 import pandas as pd
 from crewai.tools import BaseTool
 
-from first_project.pipelines.feature_engineering import generate_features
+from source_code.pipelines.feature_engineering import generate_features
 
 
 # Resolve project root from this file's location:
-# tools/ -> first_project/ (project root)
+# tools/ -> source_code/ (project root)
 PROJECT_ROOT = pathlib.Path(__file__).resolve().parents[1]
 MODEL_PATH = str(PROJECT_ROOT / "models" / "signal_model.pkl")
 

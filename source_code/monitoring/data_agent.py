@@ -1,7 +1,7 @@
 from crewai import Agent
-from first_project.pipelines.ingestion import load_all_from_directory
-from first_project.pipelines.validation import validate_and_clean, save_processed
-from first_project.monitoring.logger import log_ingestion
+from source_code.pipelines.ingestion import load_all_from_directory
+from source_code.pipelines.validation import validate_and_clean, save_processed
+from source_code.monitoring.logger import log_ingestion
 
 
 class DataAgent:

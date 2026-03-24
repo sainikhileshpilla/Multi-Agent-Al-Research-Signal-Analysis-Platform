@@ -1,11 +1,11 @@
 import pathlib
 from crewai.tools import BaseTool
-from first_project.pipelines.ingestion import load_all_from_directory
-from first_project.pipelines.validation import (
+from source_code.pipelines.ingestion import load_all_from_directory
+from source_code.pipelines.validation import (
     validate_and_clean,
     save_processed,
 )
-from first_project.monitoring.logger import log_ingestion
+from source_code.monitoring.logger import log_ingestion
 
 PROJECT_ROOT = pathlib.Path(__file__).resolve().parents[1]
 

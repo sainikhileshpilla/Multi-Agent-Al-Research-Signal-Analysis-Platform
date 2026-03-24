@@ -3,8 +3,8 @@ import os
 import pathlib
 
 from crewai.tools import BaseTool
-from first_project.monitoring.drift import detect_performance_drift
-from first_project.monitoring.retraining import trigger_retraining
+from source_code.monitoring.drift import detect_performance_drift
+from source_code.monitoring.retraining import trigger_retraining
 
 PROJECT_ROOT = pathlib.Path(__file__).resolve().parents[1]
 DEFAULT_LOG_PATH = str(PROJECT_ROOT / "logs" / "model_performance.json")

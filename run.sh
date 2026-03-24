@@ -2,4 +2,4 @@
 # Run the crew with cleanenv
 cd "$(dirname "$0")"
 source cleanenv/bin/activate
-cleanenv/bin/python first_project/main.py "$@"
+cleanenv/bin/python source_code/main.py "$@"
