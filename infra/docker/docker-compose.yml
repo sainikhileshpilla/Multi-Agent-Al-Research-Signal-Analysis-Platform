@@ -1,0 +1,55 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# AI Signal Research Platform — docker-compose
+#
+# Quick start (from the repo root):
+#   docker compose -f infra/docker/docker-compose.yml up --build
+#
+# Then open:  http://localhost:8000
+#
+# Optional — semantic search with OpenAI embeddings:
+#   OPENAI_API_KEY=sk-... docker compose -f infra/docker/docker-compose.yml up
+#
+# Without OPENAI_API_KEY the platform uses the built-in all-MiniLM-L6-v2
+# model (local, free, downloaded once to ~/.cache/chroma inside the container).
+# ─────────────────────────────────────────────────────────────────────────────
+
+services:
+  api:
+    build:
+      context: ../..                        # repo root is the build context
+      dockerfile: infra/docker/Dockerfile
+    image: ai-signal-platform:latest
+    container_name: ai-signal-api
+    ports:
+      - "8000:8000"
+
+    # ── Persistent volumes ──────────────────────────────────────────────────
+    # Mount these host folders into the container so that:
+    #   • data written by the pipeline (models, logs, deployed) is not lost
+    #     when the container restarts.
+    #   • the ChromaDB vector index survives container restarts.
+    #   • you can inspect all artifacts directly on your host machine.
+    volumes:
+      - ../../data:/app/data
+      - ../../models:/app/models
+      - ../../logs:/app/logs
+      - ../../deployed:/app/deployed
+
+    # ── Environment variables ───────────────────────────────────────────────
+    # Set OPENAI_API_KEY in your shell or a .env file at the repo root.
+    # All other variables have sensible defaults.
+    environment:
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      OPENAI_EMBEDDING_MODEL: ${OPENAI_EMBEDDING_MODEL:-text-embedding-3-small}
+
+    # ── Health check ────────────────────────────────────────────────────────
+    # Docker will mark the container as unhealthy if /health stops responding.
+    # start_period gives the app time to boot before checks begin.
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+    restart: unless-stopped

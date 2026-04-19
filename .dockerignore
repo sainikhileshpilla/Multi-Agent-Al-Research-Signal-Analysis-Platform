@@ -1,0 +1,36 @@
+# ── Virtual environments ──────────────────────────────────────────────────────
+.venv/
+cleanenv/
+
+# ── Python bytecode ───────────────────────────────────────────────────────────
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# ── Version control ───────────────────────────────────────────────────────────
+.git/
+.gitignore
+.gitattributes
+
+# ── IDE / editor ─────────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ── ChromaDB vector index ─────────────────────────────────────────────────────
+# Rebuilt automatically on first use inside the container.
+data/vectorstore/
+
+# ── Archived / large data ─────────────────────────────────────────────────────
+data/archive/
+
+# ── Secrets ───────────────────────────────────────────────────────────────────
+# Never bake secrets into the image. Pass them as environment variables.
+.env
+.env.local
+*.env
+
+# ── uv cache ──────────────────────────────────────────────────────────────────
+.uv/
