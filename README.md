@@ -274,7 +274,7 @@ curl -X POST http://localhost:8000/rag/rebuild
 
 ---
 
-## 🎓 What This Demonstrates (For Interviews)
+## 🎓 What This Demonstrates 
 
 ### Multi-Agent AI
 - **Understand agent design:** Each agent has a specific role, goal, and backstory
@@ -375,17 +375,6 @@ Place CSV files in `data/raw/` with columns:
 
 ---
 
-## 🤝 Contributing
-
-Want to extend this? Ideas:
-- Add a new agent (e.g., sentiment analyzer, risk scorer)
-- Integrate additional data sources (Alpha Vantage, finnhub)
-- Add more ML models (XGBoost, LightGBM)
-- Build advanced dashboards (Plotly, D3.js)
-- Add Prometheus/Grafana monitoring
-- Implement result caching with Redis
-
----
 
 ## 📦 Dependencies
 
@@ -415,6 +404,3 @@ MIT — Use freely in portfolio, production, or learning projects.
 5. **Deploy to Kubernetes:** `kubectl apply -k infra/k8s/`
 6. **Read code:** Start with `source_code/crew.py`
 
----
-
-**Built with ❤️ as a production-ready portfolio project for learning multi-agent AI, RAG, MLOps, and DevOps.**
