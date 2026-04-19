@@ -1,0 +1,10 @@
+# ConfigMap for non-sensitive environment variables
+# Keep secrets (like OPENAI_API_KEY) in the Secret resource instead.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ai-signal-config
+  namespace: ai-signal
+data:
+  OPENAI_EMBEDDING_MODEL: "text-embedding-3-small"
+  # Add other non-secret env vars here as needed

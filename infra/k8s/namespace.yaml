@@ -1,0 +1,7 @@
+# Create the namespace for the AI Signal platform
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ai-signal
+  labels:
+    name: ai-signal

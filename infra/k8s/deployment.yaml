@@ -1,0 +1,143 @@
+# Deployment for the AI Signal API
+#
+# Key features:
+#   • 2 replicas for high availability
+#   • Resource requests/limits for predictable scheduling
+#   • Liveness + readiness probes for health checks
+#   • Persistent volume mounts with subPath for data organization
+#   • ConfigMap for non-secrets, Secret for API keys
+#
+# Notes on image:
+#   • For local minikube/kind: use imagePullPolicy: IfNotPresent
+#     and ensure the image exists locally (docker build ...)
+#   • For cloud clusters: push to a registry (GCR, ECR, etc.) and
+#     update the image to gcr.io/my-project/ai-signal:v1.0, etc.
+#
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ai-signal-api
+  namespace: ai-signal
+  labels:
+    app: ai-signal-api
+    version: v1
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0  # Zero downtime deployments
+
+  selector:
+    matchLabels:
+      app: ai-signal-api
+
+  template:
+    metadata:
+      labels:
+        app: ai-signal-api
+      annotations:
+        prometheus.io/scrape: "false"  # Add monitoring later if needed
+
+    spec:
+      # ── Container ────────────────────────────────────────────────────────
+      containers:
+        - name: api
+          # Local development: use IfNotPresent (requires image on node)
+          # Production: push to registry and use Always
+          image: ai-signal-platform:latest
+          imagePullPolicy: IfNotPresent
+
+          ports:
+            - name: http
+              containerPort: 8000
+              protocol: TCP
+
+          # ── Environment variables ──────────────────────────────────────
+          env:
+            # From ConfigMap
+            - name: OPENAI_EMBEDDING_MODEL
+              valueFrom:
+                configMapKeyRef:
+                  name: ai-signal-config
+                  key: OPENAI_EMBEDDING_MODEL
+            # From Secret
+            - name: OPENAI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: ai-signal-secrets
+                  key: OPENAI_API_KEY
+                  optional: true  # OK if not set (uses local embeddings)
+
+          # ── Volume mounts ──────────────────────────────────────────────
+          # Mount the same PVC to multiple paths using subPath.
+          # This keeps data organized without needing separate PVCs.
+          volumeMounts:
+            - name: artifacts
+              mountPath: /app/data
+              subPath: data
+            - name: artifacts
+              mountPath: /app/models
+              subPath: models
+            - name: artifacts
+              mountPath: /app/logs
+              subPath: logs
+            - name: artifacts
+              mountPath: /app/deployed
+              subPath: deployed
+
+          # ── Resource requests & limits ─────────────────────────────────
+          # Requests: what Kubernetes reserves for this pod
+          # Limits: hard cap — pod is killed if it exceeds limits
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "100m"      # 0.1 CPU cores
+            limits:
+              memory: "512Mi"
+              cpu: "500m"      # 0.5 CPU cores
+
+          # ── Probes ─────────────────────────────────────────────────────
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 3
+
+          # ── Logging ────────────────────────────────────────────────────
+          # Standard output goes to kubectl logs
+          # Kubernetes aggregates logs for you
+
+      # ── Volumes ────────────────────────────────────────────────────────
+      volumes:
+        - name: artifacts
+          persistentVolumeClaim:
+            claimName: ai-signal-artifacts-pvc
+
+      # ── Pod scheduling ────────────────────────────────────────────────
+      # Spread replicas across different nodes for resilience
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                        - ai-signal-api
+                topologyKey: kubernetes.io/hostname

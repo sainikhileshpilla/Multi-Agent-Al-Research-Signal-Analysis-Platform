@@ -1,0 +1,35 @@
+# Kustomization file to deploy all resources at once
+#
+# Usage:
+#   kubectl apply -k infra/k8s/
+#
+# This applies all the manifests in this directory in dependency order:
+#   1. namespace (created first, others use it)
+#   2. configmap, secret, pvc
+#   3. deployment (depends on 2)
+#   4. service (exposes deployment)
+#   5. hpa (scales deployment)
+#
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: ai-signal
+
+resources:
+  - namespace.yaml
+  - configmap.yaml
+  - secret.yaml
+  - pvc.yaml
+  - deployment.yaml
+  - service.yaml
+  - hpa.yaml
+
+# Common labels applied to all resources
+commonLabels:
+  app.kubernetes.io/name: ai-signal
+  app.kubernetes.io/version: "1.0"
+  app.kubernetes.io/component: api
+
+# Common annotations
+commonAnnotations:
+  description: "AI Signal Research Platform with RAG and MLOps"

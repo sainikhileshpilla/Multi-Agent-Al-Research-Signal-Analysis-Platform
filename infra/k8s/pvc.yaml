@@ -1,0 +1,21 @@
+# Persistent Volume Claim for all runtime artifacts
+#
+# This single PVC is mounted at multiple paths using subPath:
+#   /app/data       ← processed CSV, vectorstore
+#   /app/models     ← trained model.pkl
+#   /app/logs       ← performance.json
+#   /app/deployed   ← deployment manifest
+#
+# Adjust the storage size (10Gi) based on your data volume and model size.
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: ai-signal-artifacts-pvc
+  namespace: ai-signal
+spec:
+  accessModes:
+    - ReadWriteOnce          # Single pod can read/write
+  resources:
+    requests:
+      storage: 10Gi          # Adjust this to your needs
+  # storageClassName: fast-ssd  # Use a specific storage class if available

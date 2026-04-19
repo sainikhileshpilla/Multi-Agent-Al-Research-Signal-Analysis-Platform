@@ -1,0 +1,31 @@
+# Service to expose the AI Signal API
+#
+# Type options:
+#   • LoadBalancer (used below) — external IP from cloud provider (AWS, GCP, Azure)
+#   • NodePort — exposes on a port on every node (good for local testing)
+#   • ClusterIP — internal only (used for sidecar communication)
+#
+# For local minikube/kind testing, you can either:
+#   1. Use NodePort: kubectl port-forward -n ai-signal svc/ai-signal-api 8000:8000
+#   2. Change type to NodePort and use: kubectl get svc -n ai-signal
+#
+apiVersion: v1
+kind: Service
+metadata:
+  name: ai-signal-api
+  namespace: ai-signal
+  labels:
+    app: ai-signal-api
+spec:
+  type: LoadBalancer
+  # type: NodePort  # Uncomment for local testing without LoadBalancer
+
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80                # External port
+      targetPort: http        # Maps to container port 8000
+      # nodePort: 30000       # Uncomment if using NodePort (range: 30000-32767)
+
+  selector:
+    app: ai-signal-api
