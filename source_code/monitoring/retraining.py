@@ -1,3 +1,3 @@
-def trigger_retraining():
-    print("Performance degraded. Triggering retraining pipeline...")
-    return "Retraining triggered."
+"""Compatibility shim for gradual migration to services.ml.monitoring.retraining."""
+
+from services.ml.monitoring.retraining import trigger_retraining  # noqa: F401

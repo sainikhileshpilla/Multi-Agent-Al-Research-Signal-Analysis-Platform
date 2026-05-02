@@ -1,6 +1,6 @@
 {
   "status": "deployed",
-  "deployed_at": "2026-03-03T00:54:36.424056",
-  "source_model": "/home/scarlett_speedster/source_code/models/signal_model.pkl",
-  "deployed_model": "/home/scarlett_speedster/source_code/deployed/signal_model.pkl"
+  "deployed_at": "2026-05-02T18:33:00.811652",
+  "source_model": "/home/scarlett_speedster/Multi-Agent-Al-Research-Signal-Analysis-Platform/models/signal_model.pkl",
+  "deployed_model": "/home/scarlett_speedster/Multi-Agent-Al-Research-Signal-Analysis-Platform/deployed/signal_model.pkl"
 }

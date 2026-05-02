@@ -12,7 +12,7 @@
 **Location:** `.env` file  
 **Issue:** Real OpenAI API key is committed to repository
 ```
-OPENAI_API_KEY=[REDACTED]
+OPENAI_API_KEY=sk-proj-[REDACTED-SEE-ENV-EXAMPLE]
 ```
 **Impact:** Anyone with repo access can use your OpenAI quota  
 **Fix Required:** 

@@ -1,20 +1,13 @@
-try:
-    from .crew import AISignalCrew
-except ImportError:
-    import os
-    import sys
+from source_code.runtime import load_environment, run_crew_pipeline
 
-    sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
-    from source_code.crew import AISignalCrew
+
+load_environment()
 
 
 def run():
     print("Starting AI Signal Research Crew...\n")
 
-    crew_instance = AISignalCrew()
-    crew = crew_instance.build()
-
-    result = crew.kickoff()
+    result = run_crew_pipeline()
 
     print("\n Crew Execution Completed.\n")
     print("Final Output:\n")

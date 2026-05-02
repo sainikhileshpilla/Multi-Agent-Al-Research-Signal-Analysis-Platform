@@ -4,6 +4,7 @@ from crewai import Agent, Task, Crew, Process
 from source_code.tools.data_pipeline_tool import DataPipelineTool
 from source_code.tools.financial_news_web_tool import FinancialNewsWebTool
 from source_code.tools.csv_reader_tool import CSVReaderTool
+from source_code.tools.rag_retrieval_tool import RAGRetrievalTool
 from source_code.tools.model_training_tool import ModelTrainingTool
 from source_code.tools.model_monitoring_tool import ModelMonitoringTool
 from source_code.tools.model_prediction_tool import ModelPredictionTool
@@ -19,6 +20,7 @@ class AISignalCrew:
         self.data_tool = DataPipelineTool()
         self.web_news_tool = FinancialNewsWebTool()
         self.csv_reader_tool = CSVReaderTool()
+        self.rag_retrieval_tool = RAGRetrievalTool()
         self.model_training_tool = ModelTrainingTool()
         self.model_monitoring_tool = ModelMonitoringTool()
         self.model_prediction_tool = ModelPredictionTool()
@@ -36,8 +38,8 @@ class AISignalCrew:
         self.research_agent = Agent(
             role="AI Research Analyst",
             goal="Analyze structured financial news data and extract contextual insights.",
-            backstory="Specialist in contextual retrieval and structured analysis.",
-            tools=[self.csv_reader_tool],
+            backstory="Specialist in structured financial news analysis and insight extraction.",
+            tools=[self.csv_reader_tool, self.rag_retrieval_tool],
             verbose=True,
         )
 
@@ -91,8 +93,10 @@ class AISignalCrew:
 
         self.research_task = Task(
             description=(
-                f"Use the csv_reader_tool to read the cleaned financial news dataset at "
-                f"'{PROCESSED_DATA_PATH}'. Analyze the records and extract structured insights "
+                f"Step 1: Use rag_retrieval_tool with data_path='{PROCESSED_DATA_PATH}' and a query "
+                f"focused on market-moving risk/opportunity signals to retrieve top relevant records. "
+                f"Step 2: Use csv_reader_tool to review the dataset at '{PROCESSED_DATA_PATH}'. "
+                f"Step 3: Combine the retrieved context and dataset summary to produce structured insights "
                 f"about sentiment distribution, headline patterns, and signals useful for market prediction."
             ),
             expected_output="Structured analytical summary of the financial news dataset.",
