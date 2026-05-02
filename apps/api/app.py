@@ -1,17 +1,46 @@
 import json
+import os
 import threading
 import uuid
 from datetime import datetime
 from pathlib import Path
 from typing import Any
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Depends, Header
 from fastapi.responses import HTMLResponse
 from pydantic import BaseModel
 
 from source_code.paths import DEPLOYMENT_MANIFEST_PATH, PERFORMANCE_LOG_PATH, PROCESSED_NEWS_PATH
 from source_code.runtime import run_crew_pipeline
 
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Authentication & Rate Limiting
+# ─────────────────────────────────────────────────────────────────────────────
+
+# Get API key from environment or use default (for local development)
+VALID_API_KEY = os.environ.get("API_KEY", "dev-key-change-in-production")
+
+
+def verify_api_key(x_api_key: str = Header(None)) -> str:
+    """
+    Verify API key from request header.
+
+    In production, set API_KEY env var before deploying.
+    For local development, use X-API-Key: dev-key-change-in-production
+    """
+    if not x_api_key:
+        raise HTTPException(status_code=401, detail="Missing API key. Use header: X-API-Key")
+
+    if x_api_key != VALID_API_KEY:
+        raise HTTPException(status_code=403, detail="Invalid API key")
+
+    return x_api_key
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# FastAPI Application
+# ─────────────────────────────────────────────────────────────────────────────
 
 app = FastAPI(title="AI Signal Research API", version="0.1.0")
 
@@ -471,7 +500,20 @@ def dashboard() -> HTMLResponse:
 
 
 @app.post("/run", response_model=RunResponse)
-def run_pipeline() -> RunResponse:
+def run_pipeline(api_key: str = Depends(verify_api_key)) -> RunResponse:
+    """
+    Start the crew pipeline in the background.
+
+    **Authentication:** Required. Pass your API key in the `X-API-Key` header.
+
+    Example:
+    ```
+    curl -X POST http://localhost:8000/run \\
+      -H "X-API-Key: your-api-key"
+    ```
+
+    Returns a job ID for polling status.
+    """
     job_id = str(uuid.uuid4())
     job_state = {
         "job_id": job_id,
